@@ -1,0 +1,96 @@
+<!-- Websocket listener -->
+
+<script type="text/html" data-template-name="bitskins-websocket">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-eventType"><i class="fa fa-tag"></i> Event Type(s)</label>
+        <input type="text" id="node-input-eventType">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="bitskins-websocket">
+    <p>Listens to various Bitskins WebSocket API events</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('bitskins-websocket', {
+    category: 'bitskins',
+    color: '#00bc8c',
+    defaults: {
+      name: { value: "" },
+      eventType: { value: "listed" }
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "white-globe.svg",
+    label: () => {
+      return this.name || "bitskins-websocket";
+    },
+    oneditprepare: () => {
+      $("#node-input-eventType").typedInput({
+        // default: "listed",
+        types: [
+          {
+            value: "eventType",
+            multiple: "true",
+            options: [
+              { value: "listed", label: "listed" },
+              { value: "delisted_or_sold", label: "delisted_or_sold" },
+              { value: "price_changed", label: "price_changed" },
+              { value: "extra_info", label: "extra_info" },
+            ]
+          }
+        ]
+      })
+    }
+  });
+</script>
+
+<!-- API query -->
+
+<script type="text/javascript">
+  RED.nodes.registerType('bitskins-api', {
+    category: 'bitskins',
+    color: '#00bc8c',
+    defaults: {
+      name: { value: "" },
+      url: { value: "" }
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "white-globe.svg",
+    credentials: {
+      apiKey: { type: 'text', required: true },
+      otpSecret: { type: 'text', required: true },
+    },
+    label: function () {
+      return this.name || "bitskins-api";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="bitskins-api">
+  <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+      <label for="node-input-url"><i class="fa fa-tag"></i> BitSkins API full URL</label>
+      <input type="text" id="node-input-url" placeholder="https://bitskins.com/api/v1/get_specific_items_on_sale/">
+  </div>
+  <div class="form-row">
+    <label for="node-input-apiKey"><i class="fa fa-tag"></i> API Key</label>
+    <input type="text" id="node-input-apiKey">
+  </div>
+  <div class="form-row">
+      <label for="node-input-otpSecret"><i class="fa fa-tag"></i> TOTP Secret</label>
+      <input type="text" id="node-input-otpSecret">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="bitskins-api">
+  <p>Queries the BitSkins API</p>
+</script>
